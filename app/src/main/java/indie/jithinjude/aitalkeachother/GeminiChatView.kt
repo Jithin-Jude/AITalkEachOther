@@ -1,20 +1,18 @@
 package indie.jithinjude.aitalkeachother
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Face
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aallam.openai.api.BetaOpenAI
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 fun GeminiChatView(
     apiKey: String
 ) {
-    val initMessage = "Ask one short question about Global warming."
+    val initMessage = "Ask a question about Movies."
 
     val coroutineScope = rememberCoroutineScope()
     val lazyColumnListState = rememberLazyListState()
@@ -55,7 +54,7 @@ fun GeminiChatView(
         apiKey = apiKey
     )
     val chat = generativeModel.startChat(history = listOf(
-        content(role = "user") { text("Only ask one question at a time. Never repeat question, instead create a new question from related topic. Nothing else.") },
+        content(role = "user") { text("Only ask one question at a time. Ask random question from related topic. Do not add any type of formatting or listing. Nothing else.") },
         content(role = "model") { text("Sure") }
     ))
 
@@ -72,13 +71,13 @@ fun GeminiChatView(
 
     @OptIn(BetaOpenAI::class)
     suspend fun getChatGPTResponse(gptQuery: String) {
-        val openAI = OpenAI(BuildConfig.openAiApiKey)
+        val openAI = OpenAI("")
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-3.5-turbo"),
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.User,
-                    content = gptQuery + ". Give answer in 1 or 2 lines. Also tell something about related topic in 1 or 2 lines. Nothing else."
+                    content = gptQuery + ". Give answer in 1 or 2 lines. Also tell something about related topic in 1 or 2 lines. Give answer as sentence not points. Do not add any type of formatting or listing. Nothing else."
                 )
             )
         )
@@ -130,9 +129,12 @@ fun GeminiChatView(
                         .padding(20.dp)
                 ) {
                     Row(verticalAlignment = Alignment.Top) {
-                        Icon(
-                            imageVector = if (chat.memberType == MemberType.GEMINI) Icons.Rounded.Face else Icons.Rounded.AccountCircle,
-                            contentDescription = "Send"
+                        Image(
+                            painter = if (chat.memberType == MemberType.GEMINI) painterResource(id = R.drawable.ic_gemini) else painterResource(
+                                id = R.drawable.ic_chat_gpt
+                            ),
+                            contentDescription = "icon",
+                            modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(text = chat.text, fontSize = 20.sp)
