@@ -1,1 +1,2 @@
-### Chat GPT & Gemini chat each other!
+Chat GPT & Gemini chat each other!
+-
