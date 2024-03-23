@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 fun GeminiChatView(
     apiKey: String
 ) {
-    val initMessage = "Ask a question about Movies."
+    val initMessage = "Ask a question about academy awards."
 
     val coroutineScope = rememberCoroutineScope()
     val lazyColumnListState = rememberLazyListState()
@@ -54,8 +54,22 @@ fun GeminiChatView(
         apiKey = apiKey
     )
     val chat = generativeModel.startChat(history = listOf(
-        content(role = "user") { text("Only ask one question at a time. Ask random question from related topic. Do not add any type of formatting or listing. Nothing else.") },
-        content(role = "model") { text("Sure") }
+        content(role = "user") { text("Only ask one question at a time.") },
+        content(role = "model") { text("Sure") },
+        content(role = "user") { text("Do not add any type of formatting or listing. Nothing else.") },
+        content(role = "model") { text("Which is your favorite movie?") },
+        content(role = "user") { text("My favorite movie is the Star wars franchise.") },
+        content(role = "model") { text("Which one among the franchise?") },
+        content(role = "user") { text("Episode V – The Empire Strikes Back is a nice one.") },
+        content(role = "model") { text("Why did you like that movie?") },
+        content(role = "user") { text(" It had a more serious and mature tone compared to the upbeat original film, creating a sense of real threat and danger.") },
+        content(role = "model") { text("Who directed the movie Episode V – The Empire Strikes Back?") },
+        content(role = "user") { text("Irvin Kershner.") },
+        content(role = "model") { text("Tell me the names of movies directed by Irvin Kershner other than Episode V – The Empire Strikes Back.") },
+        content(role = "user") { text("Never Say Never Again, is one of his famous movie") },
+        content(role = "model") { text("Tell me some facts about Never Say Never Again movie?") },
+        content(role = "user") { text("This was the very first film appearance of Rowan Atkinson, who later became famous as Mr. Bean.") },
+        content(role = "model") { text("Mr. Bean! Who is that?") },
     ))
 
     suspend fun getGeminiResponse(geminiQuery: String) {
